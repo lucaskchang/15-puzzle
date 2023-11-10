@@ -12,11 +12,13 @@
           <div v-for="j in 4" :key="j" class="flex flex-col">
             <div
               class="flex h-36 w-36 items-center justify-center rounded-lg"
-              :class="{
-                'bg-red-600': redSquares.includes(grid[i - 1][j - 1]),
-                'bg-white': !redSquares.includes(grid[i - 1][j - 1]),
-                'bg-gray-950': grid[i - 1][j - 1] === 0,
-              }"
+              :class="
+                grid[i - 1][j - 1] === 0
+                  ? 'bg-gray-950'
+                  : redSquares.includes(grid[i - 1][j - 1])
+                  ? 'bg-red-600'
+                  : 'bg-white'
+              "
             >
               <p
                 class="flex text-center font-serif text-7xl font-bold text-yellow-500"
