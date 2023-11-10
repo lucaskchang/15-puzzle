@@ -86,12 +86,7 @@ function reset() {
   movesList.value = [];
 }
 
-onKeyStroke('r', (e) => {
-  reset();
-});
-
-onKeyStroke('ArrowUp', (e) => {
-  e.preventDefault();
+function moveUp() {
   if (zeroLocation[0] === 0) return;
   const temp = grid.value[zeroLocation[0] - 1][zeroLocation[1]];
   grid.value[zeroLocation[0] - 1][zeroLocation[1]] = 0;
@@ -99,10 +94,9 @@ onKeyStroke('ArrowUp', (e) => {
   zeroLocation[0] -= 1;
   moves.value += 1;
   movesList.value.unshift('up');
-});
+}
 
-onKeyStroke('ArrowDown', (e) => {
-  e.preventDefault();
+function moveDown() {
   if (zeroLocation[0] === 3) return;
   const temp = grid.value[zeroLocation[0] + 1][zeroLocation[1]];
   grid.value[zeroLocation[0] + 1][zeroLocation[1]] = 0;
@@ -110,10 +104,9 @@ onKeyStroke('ArrowDown', (e) => {
   zeroLocation[0] += 1;
   moves.value += 1;
   movesList.value.unshift('down');
-});
+}
 
-onKeyStroke('ArrowLeft', (e) => {
-  e.preventDefault();
+function moveLeft() {
   if (zeroLocation[1] === 0) return;
   const temp = grid.value[zeroLocation[0]][zeroLocation[1] - 1];
   grid.value[zeroLocation[0]][zeroLocation[1] - 1] = 0;
@@ -121,10 +114,9 @@ onKeyStroke('ArrowLeft', (e) => {
   zeroLocation[1] -= 1;
   moves.value += 1;
   movesList.value.unshift('left');
-});
+}
 
-onKeyStroke('ArrowRight', (e) => {
-  e.preventDefault();
+function moveRight() {
   if (zeroLocation[1] === 3) return;
   const temp = grid.value[zeroLocation[0]][zeroLocation[1] + 1];
   grid.value[zeroLocation[0]][zeroLocation[1] + 1] = 0;
@@ -132,8 +124,30 @@ onKeyStroke('ArrowRight', (e) => {
   zeroLocation[1] += 1;
   moves.value += 1;
   movesList.value.unshift('right');
+}
+
+onKeyStroke(['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'r'], (e) => {
+  e.preventDefault();
+  switch (e.key) {
+    case 'ArrowUp':
+      moveUp();
+      break;
+    case 'ArrowDown':
+      moveDown();
+      break;
+    case 'ArrowLeft':
+      moveLeft();
+      break;
+    case 'ArrowRight':
+      moveRight();
+      break;
+    case 'r':
+      reset();
+      break;
+  }
 });
 
+// dark mode controls
 const colorMode = useColorMode();
 const isDark = computed({
   get() {
