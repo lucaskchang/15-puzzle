@@ -153,6 +153,10 @@ function scramble() {
         break;
     }
   }
+  for (let i = 0; i < 3; i++) {
+    moveDown();
+    moveRight();
+  }
   moves.value = 0;
   movesList.value = [];
 }
