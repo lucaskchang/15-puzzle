@@ -65,7 +65,7 @@ const grid = ref([
   [13, 14, 15, 0],
 ]);
 
-const redSquares = [2, 6, 10, 14, 4, 8, 12, 0];
+const redSquares = [2, 6, 10, 14, 4, 8, 12];
 const zeroLocation = [3, 3];
 const moves = ref(0);
 const movesList = ref([]);
