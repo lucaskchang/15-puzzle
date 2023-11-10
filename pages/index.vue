@@ -81,6 +81,7 @@ function reset() {
   zeroLocation[0] = 3;
   zeroLocation[1] = 3;
   moves.value = 0;
+  movesList.value = [];
 }
 
 onKeyStroke('r', (e) => {
