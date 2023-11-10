@@ -1,6 +1,5 @@
 <template>
   <div class="mx-auto p-8 text-center">
-    <p>Last Updated - 10/30/23</p>
     <p>
       Created by
       <a
@@ -8,15 +7,15 @@
         target="_blank"
         class="font-semibold text-blue-400 hover:text-blue-500"
       >
-        Lucas Chang.
+        Lucas Chang
       </a>
-      Made with
+      and
       <a
-        href="https://github.com/lukajaa/lukajaa-nuxt-template/"
+        href="https://taterowney.com/"
         target="_blank"
         class="font-semibold text-blue-400 hover:text-blue-500"
       >
-        Nuxt and TailwindCSS.
+        Tate Rowney
       </a>
     </p>
   </div>

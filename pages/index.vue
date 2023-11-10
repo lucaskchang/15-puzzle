@@ -1,42 +1,35 @@
 <template>
-  <div class="mx-auto px-10 pt-10 lg:w-1/2">
-    <p class="mb-2 text-center text-5xl font-bold tracking-tight">
-      Lukaja's Nuxt Template
-    </p>
-    <p class="mb-4 text-center">
-      Nuxt Template used for my personal projects. Includes NuxtUI, ESLint,
-      Prettier, and Google Analytics.
-    </p>
-    <p class="mb-2 mt-4 text-xl font-semibold">Installation</p>
-    <p>
-      1. Clone
-      <a
-        href="https://github.com/lukajaa/lukajaa-nuxt-template/"
-        target="_blank"
-        class="font-semibold text-blue-400 hover:text-blue-500"
+  <div class="pt-12">
+    <div class="mx-auto w-fit">
+      <p class="text-center text-5xl font-bold">15 Puzzle</p>
+      <p class="mb-2 text-center text-xl">
+        Use arrow keys to control the board. Press 'R' to reset.
+      </p>
+      <div
+        class="flex flex-col space-y-2 rounded-lg bg-gray-950 p-4 dark:ring-2 dark:ring-white"
       >
-        this repo
-      </a>
-    </p>
-    <p>2.</p>
-    <UAlert title="Terminal" icon="i-heroicons-command-line" class="text-left">
-      <template #description>yarn <br />yarn dev </template>
-    </UAlert>
-    <p class="mb-2 mt-4 text-xl font-semibold">Updating</p>
-    <UAlert
-      icon="i-heroicons-command-line"
-      title="Terminal"
-      class="mb-4 text-left"
-    >
-      <template #description>
-        yarn outdated<br />yarn add -D packages
-      </template>
-    </UAlert>
-
-    <p class="mb-2 mt-4 text-xl font-semibold">Dependencies</p>
-    <p v-for="(version, dependency) of devDependencies" :key="dependency">
-      {{ dependency }}: {{ version.replace('^', '') }}
-    </p>
+        <div v-for="i in 4" :key="i" class="flex flex-row space-x-2">
+          <div v-for="j in 4" :key="j" class="flex flex-col">
+            <div
+              class="flex h-36 w-36 items-center justify-center rounded-lg"
+              :class="{
+                'bg-red-600': redSquares.includes(grid[i - 1][j - 1]),
+                'bg-white': !redSquares.includes(grid[i - 1][j - 1]),
+                'bg-gray-950': grid[i - 1][j - 1] === 0,
+              }"
+            >
+              <p
+                class="flex text-center font-serif text-7xl font-bold text-yellow-500"
+              >
+                {{ grid[i - 1][j - 1] === 0 ? '' : grid[i - 1][j - 1] }}
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <UButton class="mt-2" block @click="reset"> Reset </UButton>
+      <p class="mt-2 text-center text-xl">Moves: {{ moves }}</p>
+    </div>
     <ClientOnly>
       <UButton
         :icon="
@@ -55,6 +48,73 @@
 </template>
 
 <script setup lang="ts">
+const grid = ref([
+  [1, 2, 3, 4],
+  [5, 6, 7, 8],
+  [9, 10, 11, 12],
+  [13, 14, 15, 0],
+]);
+
+const redSquares = [2, 6, 10, 14, 4, 8, 12, 0];
+const zeroLocation = [3, 3];
+const moves = ref(0);
+
+function reset() {
+  grid.value = [
+    [1, 2, 3, 4],
+    [5, 6, 7, 8],
+    [9, 10, 11, 12],
+    [13, 14, 15, 0],
+  ];
+  zeroLocation[0] = 3;
+  zeroLocation[1] = 3;
+  moves.value = 0;
+}
+
+onKeyStroke('r', (e) => {
+  reset();
+});
+
+onKeyStroke('ArrowUp', (e) => {
+  e.preventDefault();
+  if (zeroLocation[0] === 0) return;
+  const temp = grid.value[zeroLocation[0] - 1][zeroLocation[1]];
+  grid.value[zeroLocation[0] - 1][zeroLocation[1]] = 0;
+  grid.value[zeroLocation[0]][zeroLocation[1]] = temp;
+  zeroLocation[0] -= 1;
+  moves.value += 1;
+});
+
+onKeyStroke('ArrowDown', (e) => {
+  e.preventDefault();
+  if (zeroLocation[0] === 3) return;
+  const temp = grid.value[zeroLocation[0] + 1][zeroLocation[1]];
+  grid.value[zeroLocation[0] + 1][zeroLocation[1]] = 0;
+  grid.value[zeroLocation[0]][zeroLocation[1]] = temp;
+  zeroLocation[0] += 1;
+  moves.value += 1;
+});
+
+onKeyStroke('ArrowLeft', (e) => {
+  e.preventDefault();
+  if (zeroLocation[1] === 0) return;
+  const temp = grid.value[zeroLocation[0]][zeroLocation[1] - 1];
+  grid.value[zeroLocation[0]][zeroLocation[1] - 1] = 0;
+  grid.value[zeroLocation[0]][zeroLocation[1]] = temp;
+  zeroLocation[1] -= 1;
+  moves.value += 1;
+});
+
+onKeyStroke('ArrowRight', (e) => {
+  e.preventDefault();
+  if (zeroLocation[1] === 3) return;
+  const temp = grid.value[zeroLocation[0]][zeroLocation[1] + 1];
+  grid.value[zeroLocation[0]][zeroLocation[1] + 1] = 0;
+  grid.value[zeroLocation[0]][zeroLocation[1]] = temp;
+  zeroLocation[1] += 1;
+  moves.value += 1;
+});
+
 const colorMode = useColorMode();
 const isDark = computed({
   get() {
@@ -64,26 +124,4 @@ const isDark = computed({
     colorMode.preference = colorMode.value === 'dark' ? 'light' : 'dark';
   },
 });
-
-const devDependencies = {
-  '@nuxt/devtools': '^1.0.0',
-  '@nuxt/eslint-config': '^0.2.0',
-  '@nuxt/ui': '^2.9.0',
-  '@nuxtjs/eslint-config-typescript': '^12.1.0',
-  '@nuxtjs/eslint-module': '^4.1.0',
-  '@tailwindcss/typography': '^0.5.10',
-  '@types/node': '^20.8.9',
-  '@typescript-eslint/parser': '^6.9.1',
-  eslint: '^8.52.0',
-  'eslint-config-prettier': '^9.0.0',
-  'eslint-loader': '^4.0.2',
-  'eslint-plugin-prettier': '^5.0.1',
-  'eslint-plugin-vue': '^9.18.1',
-  nuxt: '^3.8.0',
-  'nuxt-gtag': '^1.1.1',
-  prettier: '^3.0.3',
-  'prettier-plugin-tailwindcss': '^0.5.6',
-  sass: '^1.69.5',
-  typescript: '^5.2.2',
-};
 </script>
