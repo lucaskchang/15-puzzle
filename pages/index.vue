@@ -28,7 +28,17 @@
         </div>
       </div>
       <UButton class="mt-2" block @click="reset"> Reset </UButton>
-      <p class="mt-2 text-center text-xl">Moves: {{ moves }}</p>
+      <p
+        class="mt-2 cursor-pointer text-center text-xl"
+        @click="showMoves = !showMoves"
+      >
+        Moves: {{ moves }}
+      </p>
+      <div v-if="showMoves">
+        <p v-for="move in movesList" :key="move" class="text-center">
+          {{ move }}
+        </p>
+      </div>
     </div>
     <ClientOnly>
       <UButton
@@ -58,6 +68,8 @@ const grid = ref([
 const redSquares = [2, 6, 10, 14, 4, 8, 12, 0];
 const zeroLocation = [3, 3];
 const moves = ref(0);
+const movesList = ref([]);
+const showMoves = ref(false);
 
 function reset() {
   grid.value = [
@@ -83,6 +95,7 @@ onKeyStroke('ArrowUp', (e) => {
   grid.value[zeroLocation[0]][zeroLocation[1]] = temp;
   zeroLocation[0] -= 1;
   moves.value += 1;
+  movesList.value.unshift('up');
 });
 
 onKeyStroke('ArrowDown', (e) => {
@@ -93,6 +106,7 @@ onKeyStroke('ArrowDown', (e) => {
   grid.value[zeroLocation[0]][zeroLocation[1]] = temp;
   zeroLocation[0] += 1;
   moves.value += 1;
+  movesList.value.unshift('down');
 });
 
 onKeyStroke('ArrowLeft', (e) => {
@@ -103,6 +117,7 @@ onKeyStroke('ArrowLeft', (e) => {
   grid.value[zeroLocation[0]][zeroLocation[1]] = temp;
   zeroLocation[1] -= 1;
   moves.value += 1;
+  movesList.value.unshift('left');
 });
 
 onKeyStroke('ArrowRight', (e) => {
@@ -113,6 +128,7 @@ onKeyStroke('ArrowRight', (e) => {
   grid.value[zeroLocation[0]][zeroLocation[1]] = temp;
   zeroLocation[1] += 1;
   moves.value += 1;
+  movesList.value.unshift('right');
 });
 
 const colorMode = useColorMode();
