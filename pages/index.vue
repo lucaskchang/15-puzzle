@@ -9,22 +9,27 @@
         ref="board"
         name="grid-transition"
         tag="div"
-        class="mx-auto flex w-full flex-wrap rounded-lg bg-gray-950 p-4 dark:ring-2 dark:ring-white"
+        class="mx-auto flex w-full flex-wrap bg-gray-950 p-4"
+        :class="{
+          'lg:rounded-lg': !classicMode,
+        }"
       >
         <div
           v-for="tile in displayGrid"
           :key="tile"
-          class="flex aspect-square w-1/4 flex-col lg:p-2"
+          class="flex aspect-square w-1/4 flex-col"
+          :class="{
+            'lg:p-2': !classicMode,
+          }"
         >
           <div
-            class="flex h-full w-full items-center justify-center lg:rounded-lg"
-            :class="
-              tile === 0
-                ? 'invisible'
-                : redSquares.includes(tile)
-                ? 'bg-red-600'
-                : 'bg-white'
-            "
+            class="flex h-full w-full items-center justify-center"
+            :class="{
+              'lg:rounded-lg': !classicMode,
+              invisible: tile === 0,
+              'bg-red-600': redSquares.includes(tile),
+              'bg-white': !redSquares.includes(tile),
+            }"
             @click="move(tile)"
           >
             <p
@@ -53,17 +58,25 @@
           </button>
         </div>
       </div>
-      <p
-        class="mt-2 cursor-pointer text-center text-xl"
-        @click="showMoves = !showMoves"
-      >
-        Moves: {{ moves }}
-      </p>
-      <div v-if="showMoves">
-        <p v-for="move in movesList" :key="move" class="text-center">
-          {{ move }}
-        </p>
+    </div>
+    <div class="mt-2">
+      <p class="text-center text-xl">Options</p>
+      <div class="flex flex-row justify-center space-x-2">
+        <p class="hidden lg:flex lg:flex-col">Classic Style</p>
+        <input
+          v-model="classicMode"
+          type="checkbox"
+          class="hidden lg:flex lg:flex-col"
+        />
+        <p class="flex flex-col">Show Moves</p>
+        <input v-model="showMoves" type="checkbox" class="flex flex-col" />
       </div>
+    </div>
+    <p class="mt-2 cursor-pointer text-center text-xl">Moves: {{ moves }}</p>
+    <div v-if="showMoves">
+      <p v-for="move in movesList" :key="move" class="text-center">
+        {{ move }}
+      </p>
     </div>
     <ClientOnly>
       <button class="absolute right-0 top-0 m-4" @click="isDark = !isDark">
@@ -120,6 +133,7 @@ const zeroLocation = [3, 3];
 const moves = ref(0);
 const movesList = ref([]);
 const showMoves = ref(false);
+const classicMode = ref(false);
 
 function reset() {
   grid.value = [
