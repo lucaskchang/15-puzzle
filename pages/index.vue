@@ -280,6 +280,6 @@ const isDark = computed({
 
 <style scoped>
 .grid-transition-move {
-  transition: transform 0.5s ease-in-out;
+  transition: transform 0.25s ease-in-out;
 }
 </style>
