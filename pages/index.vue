@@ -253,6 +253,7 @@ function moveUp() {
   movesList.value.unshift('up');
   transpositions.value.unshift(`(0, ${temp})`);
   transpositionString.value = `(0, ${temp})` + transpositionString.value;
+  updatePermutations();
 }
 
 function moveDown() {
@@ -265,6 +266,7 @@ function moveDown() {
   movesList.value.unshift('down');
   transpositions.value.unshift(`(0, ${temp})`);
   transpositionString.value = `(0, ${temp})` + transpositionString.value;
+  updatePermutations();
 }
 
 function moveLeft() {
@@ -277,6 +279,7 @@ function moveLeft() {
   movesList.value.unshift('left');
   transpositions.value.unshift(`(0, ${temp})`);
   transpositionString.value = `(0, ${temp})` + transpositionString.value;
+  updatePermutations();
 }
 
 function moveRight() {
@@ -289,6 +292,7 @@ function moveRight() {
   movesList.value.unshift('');
   transpositions.value.unshift(`(0, ${temp})`);
   transpositionString.value = `(0, ${temp})` + transpositionString.value;
+  updatePermutations();
 }
 
 onKeyStroke(
@@ -318,18 +322,21 @@ onKeyStroke(
         scramble();
         break;
     }
-    if (zeroLocation[0] === 3 && zeroLocation[1] === 3) {
-      const gridArray = [];
-      for (const row of grid.value) {
-        for (const tile of row) {
-          gridArray.push(tile);
-        }
-      }
-      permutations.value.push([gridArray, transpositionString.value]);
-      transpositionString.value = '';
-    }
   },
 );
+
+function updatePermutations() {
+  if (zeroLocation[0] === 3 && zeroLocation[1] === 3) {
+    const gridArray = [];
+    for (const row of grid.value) {
+      for (const tile of row) {
+        gridArray.push(tile);
+      }
+    }
+    permutations.value.push([gridArray, transpositionString.value]);
+    transpositionString.value = '';
+  }
+}
 
 // dark mode controls
 const colorMode = useColorMode();
