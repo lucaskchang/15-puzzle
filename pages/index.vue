@@ -70,9 +70,30 @@
         />
         <p class="flex flex-col">Show Moves</p>
         <input v-model="showMoves" type="checkbox" class="flex flex-col" />
+        <p class="flex flex-col">Show Group Theory</p>
+        <input
+          v-model="showGroupTheory"
+          type="checkbox"
+          class="flex flex-col"
+        />
       </div>
     </div>
     <p class="mt-2 cursor-pointer text-center text-xl">Moves: {{ moves }}</p>
+    <div v-if="showGroupTheory" class="space-y-4 text-center">
+      <div v-for="(permutation, i) in permutations" :key="permutation[1]">
+        <p v-if="i === 0">Starting Permutation</p>
+        <p v-else>{{ i }}.</p>
+        <div class="flex flex-row justify-center">
+          <div v-for="n in 15" :key="n" class="flex w-6 flex-col">
+            <p class="text-center">{{ n }}</p>
+            <p class="text-center">{{ permutation[0][n - 1] }}</p>
+          </div>
+        </div>
+        <p class="text-center">
+          {{ permutation[1] }}
+        </p>
+      </div>
+    </div>
     <div v-if="showMoves">
       <p v-for="move in movesList" :key="move" class="text-center">
         {{ move }}
@@ -131,9 +152,15 @@ useSwipe(board, {
 const redSquares = [2, 6, 10, 14, 4, 8, 12];
 const zeroLocation = [3, 3];
 const moves = ref(0);
-const movesList = ref([]);
+const movesList = ref([]) as Ref<string[]>;
+const transpositions = ref([]) as Ref<string[]>;
 const showMoves = ref(false);
+const showGroupTheory = ref(false);
 const classicMode = ref(false);
+const transpositionString = ref('');
+const permutations = ref([
+  [[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15], ''],
+]) as Ref<[number[], string][]>;
 
 function reset() {
   grid.value = [
@@ -146,6 +173,9 @@ function reset() {
   zeroLocation[1] = 3;
   moves.value = 0;
   movesList.value = [];
+  transpositions.value = [];
+  transpositionString.value = '';
+  permutations.value = [];
 }
 
 function scramble() {
@@ -173,6 +203,9 @@ function scramble() {
   }
   moves.value = 0;
   movesList.value = [];
+  transpositions.value = [];
+  transpositionString.value = '';
+  permutations.value = [];
 }
 
 function move(tile: number) {
@@ -218,6 +251,8 @@ function moveUp() {
   zeroLocation[0] -= 1;
   moves.value += 1;
   movesList.value.unshift('up');
+  transpositions.value.unshift(`(0, ${temp})`);
+  transpositionString.value = `(0, ${temp})` + transpositionString.value;
 }
 
 function moveDown() {
@@ -228,6 +263,8 @@ function moveDown() {
   zeroLocation[0] += 1;
   moves.value += 1;
   movesList.value.unshift('down');
+  transpositions.value.unshift(`(0, ${temp})`);
+  transpositionString.value = `(0, ${temp})` + transpositionString.value;
 }
 
 function moveLeft() {
@@ -238,6 +275,8 @@ function moveLeft() {
   zeroLocation[1] -= 1;
   moves.value += 1;
   movesList.value.unshift('left');
+  transpositions.value.unshift(`(0, ${temp})`);
+  transpositionString.value = `(0, ${temp})` + transpositionString.value;
 }
 
 function moveRight() {
@@ -247,7 +286,9 @@ function moveRight() {
   grid.value[zeroLocation[0]][zeroLocation[1]] = temp;
   zeroLocation[1] += 1;
   moves.value += 1;
-  movesList.value.unshift('right');
+  movesList.value.unshift('');
+  transpositions.value.unshift(`(0, ${temp})`);
+  transpositionString.value = `(0, ${temp})` + transpositionString.value;
 }
 
 onKeyStroke(
@@ -276,6 +317,16 @@ onKeyStroke(
       case 's':
         scramble();
         break;
+    }
+    if (zeroLocation[0] === 3 && zeroLocation[1] === 3) {
+      const gridArray = [];
+      for (const row of grid.value) {
+        for (const tile of row) {
+          gridArray.push(tile);
+        }
+      }
+      permutations.value.push([gridArray, transpositionString.value]);
+      transpositionString.value = '';
     }
   },
 );
