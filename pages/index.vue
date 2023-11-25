@@ -292,7 +292,7 @@ function moveRight() {
   grid.value[zeroLocation[0]][zeroLocation[1]] = temp;
   zeroLocation[1] += 1;
   moves.value += 1;
-  movesList.value.unshift('');
+  movesList.value.unshift('right');
   transpositions.value.unshift(`(0, ${temp})`);
   transpositionString.value = `(0, ${temp})` + transpositionString.value;
   updatePermutations();
