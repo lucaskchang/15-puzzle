@@ -65,7 +65,6 @@
             Solve
           </button>
         </div>
-        
       </div>
     </div>
     <div class="mt-2">
@@ -311,7 +310,7 @@ onKeyStroke(
   ['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'r', 's'],
   (e) => {
     if (isSolving) {
-        return;
+      return;
     }
     switch (e.key) {
       case 'ArrowUp':
@@ -364,250 +363,378 @@ const isDark = computed({
   },
 });
 
+// UTILITY FUNCTIONS
 
-  // UTILITY FUNCTIONS
-
-function toIndex(row, column) {
-    // row, column
-    return row*4 + column;
+function toIndex(row: number, column: number) {
+  // row, column
+  return row * 4 + column;
 }
 
-function copy(arr) {
-    return JSON.parse(JSON.stringify(arr));
+function copy(arr: any[]) {
+  return JSON.parse(JSON.stringify(arr));
 }
 
-function invert(seq) {
-    let inv = {"right":"left", "left":"right", "up":"down", "down":"up"}
-//    let inv = {"left": "up", "up":"left", "down":"right", "right":"down"};
-    let ret = [];
-    for (elem of seq) {
-        ret.push(inv[elem]);
-    }
-    return ret;
+function invert(seq: string[]) {
+  const inv = { right: 'left', left: 'right', up: 'down', down: 'up' } as {
+    [key: string]: string;
+  };
+  //    let inv = {"left": "up", "up":"left", "down":"right", "right":"down"};
+  const ret = [];
+  for (const elem of seq) {
+    ret.push(inv[elem]);
+  }
+  return ret;
 }
-
 
 // VARIABLES
 // These were previously derived using separate code, but are hardcoded here to save on computation time
 
-let solved = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 'empty']
+const solved = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 'empty'];
 
 // Sequences of moves which move whatever tile is in index n to index 10 where it can be cycled easily
-let rho = {0:["up","up","up","left","left","left","down","right","up","right","down","left","down","right","up","right","down","down"], 
-1:["up","up","up","left","left","down","right","up","left","down","down","right","up","right","down","down"], 
-2:["left","up","up","up","left","down","down","down","right","up","up","left","down","down","right","right"], 
-3:["up","up","up","left","down","down","right","up","left","down","right","down"], 
-4:["left","left","left","up","up","right","down","left","up","right","right","down","left","down","right","right"], 
-5:["up","up","left","left","down","right","up","right","down","down"], 
-6:["left","up","up","left","down","down","right","right"], 
-7:["up","up","left","down","right","down"], 
-8:["up","left","left","left","up","right","right","right","down","left","left","up","right","right","down","down"], 
-9:["up","left","left","up","right","right","down","down"], 
-10:[], 
-12:["left", "left", "left", "up", "right", "right", "down", "left", "up", "right", "down", "right"], 
-13:["left", "left", "up", "right", "down", "right"]};
-
+const rho = {
+  0: [
+    'up',
+    'up',
+    'up',
+    'left',
+    'left',
+    'left',
+    'down',
+    'right',
+    'up',
+    'right',
+    'down',
+    'left',
+    'down',
+    'right',
+    'up',
+    'right',
+    'down',
+    'down',
+  ],
+  1: [
+    'up',
+    'up',
+    'up',
+    'left',
+    'left',
+    'down',
+    'right',
+    'up',
+    'left',
+    'down',
+    'down',
+    'right',
+    'up',
+    'right',
+    'down',
+    'down',
+  ],
+  2: [
+    'left',
+    'up',
+    'up',
+    'up',
+    'left',
+    'down',
+    'down',
+    'down',
+    'right',
+    'up',
+    'up',
+    'left',
+    'down',
+    'down',
+    'right',
+    'right',
+  ],
+  3: [
+    'up',
+    'up',
+    'up',
+    'left',
+    'down',
+    'down',
+    'right',
+    'up',
+    'left',
+    'down',
+    'right',
+    'down',
+  ],
+  4: [
+    'left',
+    'left',
+    'left',
+    'up',
+    'up',
+    'right',
+    'down',
+    'left',
+    'up',
+    'right',
+    'right',
+    'down',
+    'left',
+    'down',
+    'right',
+    'right',
+  ],
+  5: [
+    'up',
+    'up',
+    'left',
+    'left',
+    'down',
+    'right',
+    'up',
+    'right',
+    'down',
+    'down',
+  ],
+  6: ['left', 'up', 'up', 'left', 'down', 'down', 'right', 'right'],
+  7: ['up', 'up', 'left', 'down', 'right', 'down'],
+  8: [
+    'up',
+    'left',
+    'left',
+    'left',
+    'up',
+    'right',
+    'right',
+    'right',
+    'down',
+    'left',
+    'left',
+    'up',
+    'right',
+    'right',
+    'down',
+    'down',
+  ],
+  9: ['up', 'left', 'left', 'up', 'right', 'right', 'down', 'down'],
+  10: [],
+  12: [
+    'left',
+    'left',
+    'left',
+    'up',
+    'right',
+    'right',
+    'down',
+    'left',
+    'up',
+    'right',
+    'down',
+    'right',
+  ],
+  13: ['left', 'left', 'up', 'right', 'down', 'right'],
+} as { [key: number]: string[] };
 
 // Permutation (11 14 n)
-let forwardCycle = ["up","left","down","right"];
-
+const forwardCycle = ['up', 'left', 'down', 'right'];
 
 // FUNCTIONS
-function swap(idx) {
-    // cycling idx and the tiles in positions 11 and 14 (which will work out to be the "12" and "15" tiles on a solved puzzle)
-    // (11 14 idx)
-    try {
-        return rho[idx].concat(copy(forwardCycle)).concat(invert(copy(rho[idx]).reverse()));
-    }
-    catch {
-        throw new Error("Specified permutation is a 2-cycle (impossible in this puzzle)");
-    }
+function swap(idx: number) {
+  // cycling idx and the tiles in positions 11 and 14 (which will work out to be the "12" and "15" tiles on a solved puzzle)
+  // (11 14 idx)
+  try {
+    return rho[idx]
+      .concat(copy(forwardCycle))
+      .concat(invert(copy(rho[idx]).reverse()));
+  } catch {
+    throw new Error(
+      'Specified permutation is a 2-cycle (impossible in this puzzle)',
+    );
+  }
 }
 
-function to3Cycles(cycles) {
-    let evenCycles = [];
-    let oddCycles = [];
-    let final = [];
-    for (c of cycles) {
-        if (c.length % 2 == 0) {
-            evenCycles.push(c);
-        }
-        else {
-            oddCycles.push(c);
-        }
+function to3Cycles(cycles: number[][]) {
+  const evenCycles = [];
+  const oddCycles = [];
+  const final = [];
+  for (const c of cycles) {
+    if (c.length % 2 === 0) {
+      evenCycles.push(c);
+    } else {
+      oddCycles.push(c);
     }
-    if (evenCycles.length % 2 == 1) {
-        throw new Error(`${cycles} is not an even permutation!`);
+  }
+  if (evenCycles.length % 2 === 1) {
+    throw new Error(`${cycles} is not an even permutation!`);
+  }
+  for (const c of oddCycles) {
+    for (let i = 0; i < c.length - 1; i += 2) {
+      final.push([c[i], c[i + 1], c[i + 2]]);
     }
-    for (c of oddCycles) {
-        for (let i=0; i<c.length-1; i+=2) {
-            final.push([c[i], c[i+1], c[i+2]]);
-        }
-    }
+  }
 
-    for (i=0; i<evenCycles.length; i+=2) {
-        let c1 = evenCycles[i];
-        let c2 = evenCycles[i+1];
-        for (j=0; j<c1.length-3; j+=2) {
-            final.push([c1[j], c1[j+1], c1[j+2]]);
-        }
-        final.push([c1[c1.length-2], c2[0], c1[c1.length-1]]);
-        final.push([c1[c1.length-2], c2[0], c2[1]]);
-        for (j=1; j<c2.length-1; j+=2) {
-            final.push([c2[j], c2[j+1], c2[j+2]]);
-        }
+  for (let i = 0; i < evenCycles.length; i += 2) {
+    const c1 = evenCycles[i];
+    const c2 = evenCycles[i + 1];
+    for (let j = 0; j < c1.length - 3; j += 2) {
+      final.push([c1[j], c1[j + 1], c1[j + 2]]);
     }
-    return final;
+    final.push([c1[c1.length - 2], c2[0], c1[c1.length - 1]]);
+    final.push([c1[c1.length - 2], c2[0], c2[1]]);
+    for (let j = 1; j < c2.length - 1; j += 2) {
+      final.push([c2[j], c2[j + 1], c2[j + 2]]);
+    }
+  }
+  return final;
 }
 
-function cycleToMoves(cycle) {
-    // takes in a 3-cycle and outputs moves to solve it
-    if (cycle.includes(11) && cycle.includes(14)) {
-        for (let i=0; i<cycle.length; i++) {
-            if (cycle[i] != 11 && cycle[i] != 14) {
-                let ret = swap(cycle[i]);
-                if (cycle[(i+1) % (cycle.length)] == 11) {
-                    return ret
-                }
-                else {
-                    return ret.concat(ret);
-                }
-            }
+function cycleToMoves(cycle: number[]) {
+  // takes in a 3-cycle and outputs moves to solve it
+  if (cycle.includes(11) && cycle.includes(14)) {
+    for (let i = 0; i < cycle.length; i++) {
+      if (cycle[i] !== 11 && cycle[i] !== 14) {
+        const ret = swap(cycle[i]);
+        if (cycle[(i + 1) % cycle.length] === 11) {
+          return ret;
+        } else {
+          return ret.concat(ret);
         }
+      }
     }
-    else if ((cycle.includes(11) && !cycle.includes(14))) {
-        if (cycle[1] == 11) {
-            cycle = [11, cycle[2], cycle[0]];
-        }
-        else if (cycle[2] == 11) {
-            cycle = [11, cycle[0], cycle[1]];
-        }
-        // [11, 14, cycle[1]], [11, 14, cycle[1]], [11, 14, cycle[2]]
-        return swap(cycle[1]).concat(swap(cycle[1])).concat(swap(cycle[2]));
+  } else if (cycle.includes(11) && !cycle.includes(14)) {
+    if (cycle[1] === 11) {
+      cycle = [11, cycle[2], cycle[0]];
+    } else if (cycle[2] === 11) {
+      cycle = [11, cycle[0], cycle[1]];
     }
-    else if ((cycle.includes(14) && !cycle.includes(11))) {
-        if (cycle[1] == 14) {
-            cycle = [14, cycle[2], cycle[0]];
-        }
-        else if (cycle[2] == 14) {
-            cycle = [14, cycle[0], cycle[1]];
-        }
-        // [11, 14, cycle[2]], [11, 14, cycle[2]], [11, 14, cycle[1]]
-        return swap(cycle[1]).concat(swap(cycle[2])).concat(swap(cycle[2]));
+    // [11, 14, cycle[1]], [11, 14, cycle[1]], [11, 14, cycle[2]]
+    return swap(cycle[1]).concat(swap(cycle[1])).concat(swap(cycle[2]));
+  } else if (cycle.includes(14) && !cycle.includes(11)) {
+    if (cycle[1] === 14) {
+      cycle = [14, cycle[2], cycle[0]];
+    } else if (cycle[2] === 14) {
+      cycle = [14, cycle[0], cycle[1]];
     }
-    else {
-        return cycleToMoves([11, cycle[0], cycle[1]]).concat(cycleToMoves([11, cycle[2], cycle[0]]));
-    }
+    // [11, 14, cycle[2]], [11, 14, cycle[2]], [11, 14, cycle[1]]
+    return swap(cycle[1]).concat(swap(cycle[2])).concat(swap(cycle[2]));
+  } else {
+    return cycleToMoves([11, cycle[0], cycle[1]]).concat(
+      cycleToMoves([11, cycle[2], cycle[0]]),
+    );
+  }
 }
 
-function toMoves(permutation) {
-    // takes in a scramble and outputs moves to solve it
-    let done = [];
-    let cycles = [];
-    for (let i=0; i<permutation.length; i++) {
-        if (permutation[i] == 'empty') {
-            continue;
-        }
-        if (!done.includes(permutation[i])) {
-            done.push(permutation[i]);
-            if (permutation[i] != i) {
-                cycles.push([permutation[i]]);
-                let current = permutation[i];
-                while (current != i) {
-                    current = permutation[current];
-                    done.push(current);
-                    cycles[cycles.length-1].push(current);
-                }
-            }
-        }
+function toMoves(permutation: number[] | string[]) {
+  // takes in a scramble and outputs moves to solve it
+  const done = [] as number[];
+  const cycles = [];
+  for (let i = 0; i < permutation.length; i++) {
+    if (permutation[i] === 'empty') {
+      continue;
     }
-    let moves = [];
-    for (c of to3Cycles(cycles).reverse()) {
-        moves = moves.concat(cycleToMoves(c));
+    if (!done.includes(permutation[i])) {
+      done.push(permutation[i]);
+      if (permutation[i] !== i) {
+        cycles.push([permutation[i]]);
+        let current = permutation[i];
+        while (current !== i) {
+          current = permutation[current];
+          done.push(current);
+          cycles[cycles.length - 1].push(current);
+        }
+      }
     }
-    return moves;
+  }
+  let moves = [] as string[];
+  for (const c of to3Cycles(cycles).reverse()) {
+    moves = moves.concat(cycleToMoves(c));
+  }
+  return moves;
 }
 
 function emptyToBottomRight(board) {
-    board = copy(board);
-    let moves = [];
-    let start = board.indexOf('empty');
-    currentRow = Math.floor(start/4);
-    currentCol = start % 4;
-    for (let i=0; i<3-(start % 4); i++) {
-        moves.push("right");
-        board[toIndex(currentRow, currentCol)] = board[toIndex(currentRow, currentCol+1)];
-        board[toIndex(currentRow, currentCol+1)] = 'empty';
-        currentCol++;
-    }
-    for (let i=0; i<3-(Math.floor(start/4)); i++) {
-        moves.push("down");
-        board[toIndex(currentRow, currentCol)] = board[toIndex(currentRow+1, currentCol)];
-        board[toIndex(currentRow+1, currentCol)] = 'empty';
-        currentRow++;
-    }
-    return [moves, board];
+  board = copy(board);
+  const moves = [];
+  const start = board.indexOf('empty');
+  let currentRow = Math.floor(start / 4);
+  let currentCol = start % 4;
+  for (let i = 0; i < 3 - (start % 4); i++) {
+    moves.push('right');
+    board[toIndex(currentRow, currentCol)] =
+      board[toIndex(currentRow, currentCol + 1)];
+    board[toIndex(currentRow, currentCol + 1)] = 'empty';
+    currentCol++;
+  }
+  for (let i = 0; i < 3 - Math.floor(start / 4); i++) {
+    moves.push('down');
+    board[toIndex(currentRow, currentCol)] =
+      board[toIndex(currentRow + 1, currentCol)];
+    board[toIndex(currentRow + 1, currentCol)] = 'empty';
+    currentRow++;
+  }
+  return [moves, board];
 }
 
-function optimizeMoves(moves) {
-    let inv = {"right":"left", "left":"right", "up":"down", "down":"up"}
-    for (i=0; i<100; i++) {
-        let hasChanged = false;
-        let j=0;
-        while (j < moves.length) {
-            if (moves[j] == inv[moves[j+1]]) {
-                moves.splice(j, 2);
-                hasChanged = true;
-            }
-            j++;
-        }
-        if (!hasChanged) {
-            break;
-        }
+function optimizeMoves(moves: string[]) {
+  const inv = { right: 'left', left: 'right', up: 'down', down: 'up' } as {
+    [key: string]: string;
+  };
+  for (let i = 0; i < 100; i++) {
+    let hasChanged = false;
+    let j = 0;
+    while (j < moves.length) {
+      if (moves[j] === inv[moves[j + 1]]) {
+        moves.splice(j, 2);
+        hasChanged = true;
+      }
+      j++;
     }
-    return moves;
+    if (!hasChanged) {
+      break;
+    }
+  }
+  return moves;
 }
 
-
-function solve(grid) {
-    let board = [];
-    for (row of grid) {
-        for (elem of row) {
-            if (elem == 0) {
-                board.push('empty');
-            }
-            else {
-                board.push(elem-1);
-            }
-        }
+function solve(grid: number[][]) {
+  let board = [];
+  for (const row of grid) {
+    for (const elem of row) {
+      if (elem === 0) {
+        board.push('empty');
+      } else {
+        board.push(elem - 1);
+      }
     }
-    let ret = emptyToBottomRight(board);
-    board = ret[1];
-    let moves = ret[0].concat(toMoves(board));
-    return optimizeMoves(moves);
+  }
+  const ret = emptyToBottomRight(board);
+  board = ret[1];
+  const moves = ret[0].concat(toMoves(board));
+  return optimizeMoves(moves);
 }
 
-let moveFuncs = {"left":moveLeft, "right":moveRight, "up":moveUp, "down":moveDown};
+const moveFuncs = {
+  left: moveLeft,
+  right: moveRight,
+  up: moveUp,
+  down: moveDown,
+};
 
 let isSolving = false;
 
-function iterMoves(moves) {
-    if (moves.length == 0) {
-        isSolving = false;
-        return;
-    }
-    moveFuncs[moves[0]]();
-    setTimeout(iterMoves, 100, moves.slice(1));
+function iterMoves(moves: string[]) {
+  if (moves.length === 0) {
+    isSolving = false;
+    return;
+  }
+  moveFuncs[moves[0]]();
+  setTimeout(iterMoves, 100, moves.slice(1));
 }
 
 function solveButton() {
-    if (isSolving) {
-        return;
-    }
-    isSolving = true;
-    iterMoves(solve(grid));
+  if (isSolving) {
+    return;
+  }
+  isSolving = true;
+  iterMoves(solve(grid.value));
 }
-
 </script>
 
 <style scoped>
