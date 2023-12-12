@@ -171,6 +171,9 @@ const permutations = ref([
 ]) as Ref<[number[], string][]>;
 
 function reset() {
+  if (isSolving) {
+    return;
+  }
   grid.value = [
     [1, 2, 3, 4],
     [5, 6, 7, 8],
@@ -189,6 +192,9 @@ function reset() {
 }
 
 function scramble() {
+  if (isSolving) {
+    return;
+  }
   reset();
   for (let i = 0; i < 250; i++) {
     const random = Math.floor(Math.random() * 4);
@@ -388,8 +394,6 @@ function invert(seq: string[]) {
 
 // VARIABLES
 // These were previously derived using separate code, but are hardcoded here to save on computation time
-
-const solved = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 'empty'];
 
 // Sequences of moves which move whatever tile is in index n to index 10 where it can be cycled easily
 const rho = {
@@ -739,6 +743,6 @@ function solveButton() {
 
 <style scoped>
 .grid-transition-move {
-  transition: transform 0.25s ease-in-out;
+  transition: transform 0.1s ease-in-out;
 }
 </style>
