@@ -1,5 +1,3 @@
-# Lukajaa Nuxt Template
+# 15 Puzzle
 
-Nuxt Template used for my personal projects. Includes NuxtUI, ESLint, Prettier, and Google Analytics.
-
-Preview: [https://template.lucaskchang.com](https://template.lucaskchang.com)
+A website with an interactive 15-puzzle and a demonstration of how group theory can be used to solve it.
